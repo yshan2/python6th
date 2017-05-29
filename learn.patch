@@ -1,0 +1,446 @@
+Index: datastructure/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/__init__.py	(revision )
++++ datastructure/__init__.py	(revision )
+@@ -0,0 +1,0 @@
+Index: datastructure/chain.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/chain.py	(revision )
++++ datastructure/chain.py	(revision )
+@@ -0,0 +1,119 @@
++class node:
++	def __init__(self,v):
++		self.next = None
++		self.value = v
++		self.pre= None
++
++	# def __str__(self):
++	# 	return self.value
++
++
++class singleChain:
++	def __init__(self):
++		self.__head = None
++		self.__count = 0
++		# self.__next = None
++
++	def add(self,v):
++		a = node(v)
++		a.next = self.__head
++		self.__head = a
++		self.__count += 1
++
++	def addtail(self,v):
++		a = node(v)
++		if self.__head is not None:
++			cur = self.__head
++			while cur.next is not None:
++				cur = cur.next
++			cur.next = a
++		else:
++			self.add(v)
++		self.__count += 1
++
++	def traval(self):
++		if self.__head is not None:
++			cur = self.__head
++			print(cur.value,end=' ')
++			while cur.next is not None:
++				cur = cur.next
++				print(cur.value,end=' ')
++		print('  end.')
++
++	def prt2(self):
++		cur = self.__head
++		pre = None
++		stash = []
++		while cur.next is not None:
++			stash.append(cur)
++			cur = cur.next
++		stash.append(cur)
++		while len(stash) > 0 :
++			print(stash.pop().value,end=' ')
++		print(' end.')
++
++	def prt(self):
++		cur = self.__head
++		while cur.next is not None:
++			cur.next.pre = cur
++			cur = cur.next
++		while cur.pre is not None:
++			print(cur.value,end=' ')
++			cur = cur.pre
++		print(cur.value, end=' reverse end. \n')
++
++	def revk(self,k):
++		if k <= self.__count:
++			cur = self.__head
++			c = self.__count - k
++			while c > 0:
++				cur = cur.next
++				c -= 1
++			print(cur.value,end= ' as the reverse %d\'s\n' % k)
++		else: print(self.__head.value, end= ' as the reverse %d\'s\n' % k)
++
++	def revs(self):
++		if self.__count > 0:
++			cur = self.__head
++			aft = cur.next
++			pre = None
++			cur.next = None
++			while aft is not None:
++				pre = cur
++				cur = aft
++				aft = aft.next
++				cur.next = pre
++			cur.next = pre
++			self.__head = cur
++
++
++
++x = singleChain()
++x.revs()
++x.add(1)
++x.revs()
++x.traval()
++x.add(2)
++x.traval()
++x.addtail(4)
++x.addtail(5)
++x.traval()
++x.revs()
++x.traval()
++x.addtail(6)
++x.addtail(7)
++x.add(8)
++x.traval()
++x.prt()
++x.revk(3)
++x.revk(5)
++x.revk(9)
++x.revs()
++# x.prt()
++x.traval()
++x.prt2()
++
++
++
++
++
+Index: datastructure/fastsort/try2.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/fastsort/try2.py	(revision )
++++ datastructure/fastsort/try2.py	(revision )
+@@ -0,0 +1,34 @@
++def least(l,n):
++	if n < 1:
++		return
++	i = 0
++	j = i
++	for i in range(len(l)):
++		if l[j] > l[i]:
++			j = i
++	print(l[j])
++	l = l[:j]+l[j+1:]
++	least(l,n-1)
++
++def least2(l2,n):
++	l = list(tuple(l2))
++	# l.append(3)
++	# print(l)
++	# print(l2)
++	for j in range(len(l)-1):
++		for i in range(len(l)-j-1):
++			if l[i] > l[i+1]:
++				l[i],l[i+1] = l[i+1],l[i]
++	print(l)
++	for p in range(n):
++		print(l[p])
++
++s = [54, 226, 93, 17, 77, 31, 44, 55, 20, 54, 26, 93, 17, 77, 31, 44, 55, 20]
++print(s)
++least(s,2)
++
++least2(s,3)
++
++
++
++
+Index: datastructure/fastsort/fastsort.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/fastsort/fastsort.py	(revision )
++++ datastructure/fastsort/fastsort.py	(revision )
+@@ -0,0 +1,44 @@
++def quick_sort(alist, start, end):
++    """快速排序"""
++
++    # 递归的退出条件
++    if start >= end:
++        return
++
++    # 设定起始元素为要寻找位置的基准元素
++    mid = alist[start]
++
++    # low为序列左边的由左向右移动的游标
++    low = start
++
++    # high为序列右边的由右向左移动的游标
++    high = end
++
++    while low < high:
++        # 如果low与high未重合，high指向的元素不比基准元素小，则high向左移动
++        while low < high and alist[high] >= mid:
++            high -= 1
++        # 将high指向的元素放到low的位置上
++        alist[low] = alist[high]
++
++        # 如果low与high未重合，low指向的元素比基准元素小，则low向右移动
++        while low < high and alist[low] < mid:
++            low += 1
++        # 将low指向的元素放到high的位置上
++        alist[high] = alist[low]
++
++    # 退出循环后，low与high重合，此时所指位置为基准元素的正确位置
++    # 将基准元素放到该位置
++    alist[low] = mid
++
++    # 对基准元素左边的子序列进行快速排序
++    quick_sort(alist, start, low-1)
++
++    # 对基准元素右边的子序列进行快速排序
++    quick_sort(alist, low+1, end)
++
++
++# alist = [54,26,93,17,77,31,44,55,20]
++alist = [17, 20, 17]
++quick_sort(alist,0,len(alist)-1)
++print(alist)
+\ No newline at end of file
+Index: datastructure/fastsort/srt.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/fastsort/srt.py	(revision )
++++ datastructure/fastsort/srt.py	(revision )
+@@ -0,0 +1,22 @@
++def sort(lst):
++	l = len(lst)
++	gap = l//2
++
++	while gap>0:
++		i = 1
++		while i < l:
++			while i-gap >= 0 and lst[i]<lst[i-gap]:
++				lst[i],lst[i-gap] = lst[i-gap],lst[i]
++				i -= 1
++			i += 1
++		gap = gap//2
++
++a = [54,226,93,17,77,31,44,55,20,54,26,93,17,77,31,44,55,20]
++print(a)
++sort(a)
++print(a)
++
++
++
++
++
+Index: datastructure/fastsort/double link.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/fastsort/double link.py	(revision )
++++ datastructure/fastsort/double link.py	(revision )
+@@ -0,0 +1,133 @@
++class doubleChain():
++	def __init__(self):
++		self.__head = None
++		self.__length = 0
++
++	def is_empty(self):
++		if self.__head is None:
++			return True
++		else:
++			return False
++	# 链表是否为空
++
++	def length(self):
++	# 链表长度
++		return self.__length
++
++	def travel(self):
++	# 遍历链表
++		n = self.__head
++		while n is not None:
++			print(n.value, end= ', ')
++			n = n.next
++		print('done')
++
++	def add(self,item):
++	# 链表头部添加
++		n = node(item)
++		if self.__head is None:
++			self.__head = n
++		else:
++			i = self.__head
++			i.pre = n
++			self.__head = n
++			n.next = i
++		self.__length += 1
++
++	def append(self,item):
++	# 链表尾部添加
++		if self.__head is not None:
++			cur = self.__head
++			n = node(item)
++			while cur.next is not None:
++				cur = cur.next
++			cur.next = n
++			n.pre = cur
++		else:
++			self.add(item)
++		self.__length += 1
++
++	def insert(self,pos,item):
++	# 指定位置添加
++		cur = self.__head
++		n = node(item)
++		if pos > self.length():
++			self.append(item)
++		elif pos < 2:
++			self.add(item)
++		else:
++			for i in range(pos-1):
++				cur = cur.next
++			n.next = cur
++			cur.pre.next = n
++			cur.pre = n
++		self.__length += 1
++
++	def	remove(self,item):
++		n = self.__head
++		while n is not None:
++			if n.value == item:
++				n.pre.next = n.next
++				n.next.pre = n.pre
++				self.__length -= 1
++				break
++			n = n.next
++		else:
++			print('not found.')
++		print('done remove.')
++
++	# 删除节点
++	def search(self,item):
++	# 查找节点是否存在
++		n = self.__head
++		while n is not None:
++			if n.value == item:
++				print('found.')
++				break
++			n = n.next
++		else:
++			print('not found search.')
++
++class node():
++	def __init__(self,item):
++		self.next = None
++		self.pre = None
++		self.value = item
++
++l = doubleChain()
++print(l.is_empty())
++l.add(1)
++l.add(2)
++l.append(3)
++l.travel()
++print(l.is_empty())
++print(l.length())
++l.add(4)
++print(l.length())
++l.add(5)
++print(l.length())
++l.add(6)
++print(l.length())
++l.append(7)
++print(l.length())
++l.append(8)
++print(l.length())
++l.travel()
++l.search(4)
++l.remove(1)
++print(l.length())
++l.travel()
++l.insert(5,10)
++print(l.length())
++l.travel()
++print(l.length())
++
++
++
++
++
++
++
++
++
++
+Index: datastructure/fastsort/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/fastsort/__init__.py	(revision )
++++ datastructure/fastsort/__init__.py	(revision )
+@@ -0,0 +1,0 @@
+Index: datastructure/stash.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- datastructure/stash.py	(revision )
++++ datastructure/stash.py	(revision )
+@@ -0,0 +1,29 @@
++def fastsort(lst,start,end):
++	if end - start < 2:
++		return
++	# i = start + 1
++	left = start
++	right = end
++	while left < right:
++
++		while left < right and lst[left] <= lst[start]:
++			left += 1
++		while left < right and lst[right] > lst[start]:
++			right -= 1
++		if lst[left] <= lst[start]:
++			lst[left],lst[start] = lst[start],lst[left]
++		else:
++			lst[left],lst[right] = lst[right],lst[left]
++	lst[start],lst[left-1] = lst[left-1],lst[start]
++
++	fastsort(lst,start,left-2)
++	fastsort(lst,left,end)
++
++# l = [17, 20, 17]
++l = [54,226,93,17,77,31,44,55,20,54,26,93,17,77,31,44,55,20]
++print(l)
++fastsort(l,0,len(l)-1)
++print(l)
++
++
++
